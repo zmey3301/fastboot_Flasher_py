@@ -129,8 +129,6 @@ eraseparse = ppa.Suppress('erase ') + ppa.OneOrMore(ppa.Word(ppa.alphanums + '-_
 configfile = open('config.sst', 'r')
 config = configfile.readlines()
 configfile.close()
-company = companyparse.parseString(config[0])
-company = company[0]
 config.remove(config[0])
 prod = devparse.parseString(config[0]).asList()
 config.remove(config[0])
