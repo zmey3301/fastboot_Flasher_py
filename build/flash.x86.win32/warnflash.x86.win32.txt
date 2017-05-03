@@ -1,0 +1,26 @@
+missing module named resource - imported by posix, E:\fastboot_Flasher_py\flash.py
+missing module named posix - imported by os, E:\fastboot_Flasher_py\flash.py
+missing module named _posixsubprocess - imported by subprocess, E:\fastboot_Flasher_py\flash.py
+missing module named 'org.python' - imported by pickle, E:\fastboot_Flasher_py\flash.py, xml.sax
+missing module named ce - imported by os, E:\fastboot_Flasher_py\flash.py
+missing module named readline - imported by cmd, code, pdb, E:\fastboot_Flasher_py\flash.py
+excluded module named _frozen_importlib - imported by importlib, importlib.abc, E:\fastboot_Flasher_py\flash.py
+missing module named _frozen_importlib_external - imported by importlib._bootstrap, importlib, importlib.abc, E:\fastboot_Flasher_py\flash.py
+missing module named _scproxy - imported by urllib.request
+missing module named java - imported by platform, E:\fastboot_Flasher_py\flash.py
+missing module named 'java.lang' - imported by platform, E:\fastboot_Flasher_py\flash.py, xml.sax._exceptions
+missing module named vms_lib - imported by platform, E:\fastboot_Flasher_py\flash.py
+missing module named termios - imported by tty, E:\fastboot_Flasher_py\flash.py, getpass
+missing module named _dummy_threading - imported by dummy_threading, E:\fastboot_Flasher_py\flash.py
+missing module named grp - imported by tarfile, shutil, E:\fastboot_Flasher_py\flash.py
+missing module named pwd - imported by posixpath, tarfile, shutil, http.server, webbrowser, E:\fastboot_Flasher_py\flash.py, netrc, getpass
+missing module named org - imported by copy, E:\fastboot_Flasher_py\flash.py
+missing module named 'urllib3.packages.six.moves' - imported by urllib3.exceptions, urllib3.connectionpool, urllib3.connection, urllib3.util.response, urllib3.request, urllib3.response, urllib3.poolmanager
+missing module named StringIO - imported by urllib3.packages.six
+missing module named backports - imported by urllib3.packages.ssl_match_hostname
+missing module named _abcoll - imported by urllib3.packages.ordered_dict
+missing module named dummy_thread - imported by urllib3.packages.ordered_dict
+missing module named thread - imported by urllib3.packages.ordered_dict
+missing module named Queue - imported by urllib3.connectionpool
+missing module named __builtin__ - imported by pyparsing
+missing module named ordereddict - imported by pyparsing
