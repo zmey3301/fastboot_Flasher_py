@@ -121,7 +121,6 @@ def downloader(mode, dev):
         os.remove(filesApprooved[firmwarev]['file'])
     elif mode == 'recovery':
         return filesApprooved[firmwarev]['file']
-companyparse = ppa.Suppress('company -') + ppa.Word(ppa.alphas)
 devparse = ppa.Suppress('devices:') + ppa.OneOrMore(ppa.Word(ppa.alphas) + ppa.Suppress("as ") + ppa.Word(ppa.alphanums + '-_ ') + ppa.Optional(ppa.Suppress(",")))
 downloadUrlParse = ppa.Suppress('download config url:') + ppa.Word(ppa.alphanums + '/:-_.')
 flashparse = ppa.Suppress('flash ') + ppa.OneOrMore(ppa.Word(ppa.alphanums + '-_.') + ppa.Suppress('to') + ppa.Word(ppa.alphanums + '-_') + ppa.Optional(ppa.Suppress(',')))
@@ -284,7 +283,7 @@ i = 0
         #whatican.remove(prodnames[i])
     #i += 1
 if len(whatican) > 1:
-    print('Подключено несколько устройств ' + colored(company, 'green', attrs=['bold']) + ', выберите необходимое из списка ниже:')
+    print('Подключено несколько устройств,' + ' выберите необходимое из списка ниже:')
     i = 0
     for device in whatican:
         i += 1
