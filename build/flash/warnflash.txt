@@ -1,0 +1,18 @@
+missing module named 'org.python' - imported by pickle, /home/soulstring/script_test/flash.py, xml.sax
+excluded module named _frozen_importlib - imported by importlib, importlib.abc, /home/soulstring/script_test/flash.py
+missing module named _frozen_importlib_external - imported by importlib._bootstrap, importlib, importlib.abc, /home/soulstring/script_test/flash.py
+missing module named _winreg - imported by platform, /home/soulstring/script_test/flash.py
+missing module named _scproxy - imported by urllib.request
+missing module named java - imported by platform, /home/soulstring/script_test/flash.py
+missing module named 'java.lang' - imported by platform, /home/soulstring/script_test/flash.py, xml.sax._exceptions
+missing module named vms_lib - imported by platform, /home/soulstring/script_test/flash.py
+missing module named winreg - imported by platform, mimetypes, /home/soulstring/script_test/flash.py, urllib.request
+missing module named nt - imported by os, ntpath, shutil, /home/soulstring/script_test/flash.py
+missing module named msvcrt - imported by subprocess, /home/soulstring/script_test/flash.py, getpass
+missing module named _winapi - imported by subprocess, /home/soulstring/script_test/flash.py
+missing module named _dummy_threading - imported by dummy_threading, /home/soulstring/script_test/flash.py
+missing module named org - imported by copy, /home/soulstring/script_test/flash.py
+missing module named netbios - imported by uuid
+missing module named win32wnet - imported by uuid
+missing module named __builtin__ - imported by pyparsing
+missing module named ordereddict - imported by pyparsing
