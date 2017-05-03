@@ -1,0 +1,16 @@
+<<<<<<< HEAD
+devices: MARMITE as Wileyfox Swift 2, CRACKLING as Wileyfox Swift, KIPPER as Wileyfox Storm, PORRIDGE as Wileyfox Spark
+=======
+company - Wileyfox
+devices: MARMITE as Swift 2, CRACKLING as Swift, KIPPER as Storm, PORRIDGE as Spark
+>>>>>>> 44f36a0b8dc9448d2e245d454098d0294326a9a7
+download config url: http://work.sstring.ru/script_download/download.txt
+MARMITE 
+    flash system.img to system, cache.img to cache, NON-HLOS.bin to modem, adspso.bin to dsp, emmc_appsboot.mbn to aboot, keymaster.mbn to keymaster, devcfg.mbn to devcfg, rpm.mbn to rpm, sbl1.mbn to sbl1, splash.img to splash, tz.mbn to tz, boot.img to boot
+    erase none
+CRACKLING, KIPPER
+    flash system.img to system, cache.img to cache, emmc_appsboot.mbn to aboot, emmc_appsboot.mbn to abootbak, sbl1.mbn to sbl1, sbl1.mbn to sbl1bak, tz.mbn to tz, tz.mbn to tzbak, hyp.mbn to hyp, hyp.mbn to hypbak, rpm.mbn to rpm, rpm.mbn to rpmbak, NON-HLOS.bin to modem, splash.img to splash, boot.img to boot 
+    erase splash, DDR
+PORRIDGE
+    flash system.img to system, boot.img to boot, cache.img to cache
+    erase none
