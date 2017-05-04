@@ -448,20 +448,22 @@ if fbrebooterr == 'y' and upd == '3':
 elif fbrebooterr == '' and upd == '3':
     input('Пожалуйста, когда устройство перезагрузится включите отладку и нажмите Enter')
 if upd == '3':
-    i = 0
-    rstrestore = 'n'
+    success = None
+    rstrestore = None
     print('Подтвердите восстановление на устройстве!')
-    while i != 1:
+    while success != True:
         try:
             subprocess.check_output(['adb', 'restore', 'backup.ab'], stderr=subprocess.STDOUT)
         except subprocess.CalledProcessError as err:
             rstrestore = input('Восстановление было прервано, повторить? (' + colored('[y]', 'green', attrs=['bold']) + '/n): ')
             if rstrestore == 'N' or rstrestore == 'Т' or rstrestore == 'т':
                 rstrestore = 'n'
-        if rstrestore != 'n':
-            i = 0;
+            if rstrestore != 'n':
+                success = False
+            else:
+                errormesg('Восстановление было прервано', 13)
         else:
-            i = 1
+            success = True
     input(colored('Успешно! ', 'green', attrs=['bold', 'blink']) + 'Нажмите Enter чтобы закончить.')
     cls()
     sys.exit(0)

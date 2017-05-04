@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['flash.py'],
-             pathex=['/home/soulstring/script_test/fastboot_Flasher_py'],
+             pathex=['/home/soulstring/script_test/fastboot_Flasher_py/src'],
              binaries=[],
              datas=[],
              hiddenimports=[],

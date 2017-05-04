@@ -4,7 +4,7 @@ block_cipher = None
 
 
 a = Analysis(['flash.py'],
-             pathex=['E:\\fastboot_Flasher_py'],
+             pathex=['E:\\fastboot_Flasher_py\src'],
              binaries=[],
              datas=[],
              hiddenimports=['queue'],
