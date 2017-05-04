@@ -1,0 +1,10 @@
+language: python
+python:
+  - "3.4"
+  - "3.5"
+  - "3.6"
+  - '3.7-dev'
+# command to install dependencies
+install: "pip install -r src/requirements.txt"
+# command to run tests
+script: pyinstaller flash.x86_64.linux.spec

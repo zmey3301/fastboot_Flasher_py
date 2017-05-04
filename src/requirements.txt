@@ -1,0 +1,9 @@
+pyinstaller
+pyparsing
+termcolor
+pycurl
+zipfile
+hashlib
+certifi
+urllib3
+colorama
