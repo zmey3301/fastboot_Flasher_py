@@ -3,7 +3,6 @@ pyparsing
 termcolor
 pycurl
 zipfile36
-hashlib
 certifi
 urllib3
 colorama
