@@ -1,3 +1,4 @@
+[![Build Status](https://travis-ci.org/zmey3301/fastboot_Flasher_py.svg?branch=master)](https://travis-ci.org/zmey3301/fastboot_Flasher_py)
 # fastboot_Flasher_py
 На данный момент скрипт умеет:
   1. Прошивать устройства через fastboot согласно конфигурационного файла **config.sst**;
