@@ -125,9 +125,16 @@ devparse = ppa.Suppress('devices:') + ppa.OneOrMore(ppa.Word(ppa.alphas) + ppa.S
 downloadUrlParse = ppa.Suppress('download config url:') + ppa.Word(ppa.alphanums + '/:-_.')
 flashparse = ppa.Suppress('flash ') + ppa.OneOrMore(ppa.Word(ppa.alphanums + '-_.') + ppa.Suppress('to') + ppa.Word(ppa.alphanums + '-_') + ppa.Optional(ppa.Suppress(',')))
 eraseparse = ppa.Suppress('erase ') + ppa.OneOrMore(ppa.Word(ppa.alphanums + '-_') + ppa.Optional(ppa.Suppress(',')))
-configfile = open('config.sst', 'r')
-config = configfile.readlines()
-configfile.close()
+#with open('config.sst', 'r') as configfile:
+    #try:
+        #config = configfile.readlines
+    #except FileNotFoundError:
+        #errormesg('Файл конфигурации не найден', 51)
+try:
+    with open('config.sst', 'r') as configfile:
+        config = configfile.readlines()
+except FileNotFoundError:
+    errormesg('Файл конфигурации не найден', 51)
 prod = devparse.parseString(config[0]).asList()
 config.remove(config[0])
 downloadConfigUrl = downloadUrlParse.parseString(config[0]).asList()
@@ -168,7 +175,10 @@ if downloading == 'т':
 if upd == "3":
     ready = None
     while ready != True:
-        adbtest = subprocess.check_output(['adb', 'devices'], stderr=subprocess.STDOUT)
+        try:
+            adbtest = subprocess.check_output(['adb', 'devices'], stderr=subprocess.STDOUT)
+        except FileNotFoundError:
+            errormesg('Драйвер ADB не найден', 52)
         adbtest = str(adbtest, sys.stdout.encoding)
         print(adbtest)
         if str(b'\tunauthorized\n', sys.stdout.encoding) in adbtest:
@@ -193,7 +203,10 @@ if upd == "3":
     if adbtestfail == None:
         print ('Разблокируйте устройство и подтвердите операцию резервного копирования!')
         adbbk = subprocess.check_output(["adb", "backup", "-all", "-nosystem", "-obb", '-apk'], stderr=subprocess.STDOUT)
-adbdevice = str(subprocess.check_output(["adb", "devices"]), sys.stdout.encoding)
+try:
+    adbdevice = str(subprocess.check_output(["adb", "devices"]), sys.stdout.encoding)
+except FileNotFoundError:
+    errormesg('Драйвер ADB не найден', 52)
 if str(b'\tdevice\n', sys.stdout.encoding) in adbdevice:
     adbreboot = str(input("Обнаружено устройство, работающее по протоколу ADB. Перезагрузить его в Fastboot? (y/" + colored("[n]", "green", attrs=["bold"]) + "): "))
     if adbreboot == "Y" or adbreboot == "Н" or adbreboot == "н":
@@ -239,7 +252,9 @@ if upd == '4':
     sys.exit(0)
 sudoer = 'offline'
 try:
-    fbtdev = subprocess.check_output(["fastboot", "getvar", "product"], stderr=subprocess.STDOUT, timeout=2)
+    fbtdev = subprocess.check_output(["fastboot", "getvar", "product"], stderr=subprocess.STDOUT, timeout=1)
+except FileNotFoundError:
+    ('Драйвер Fastboot не найден', 52)
 except subprocess.TimeoutExpired as err:
     if sys.platform == 'linux' or sys.platform == 'linux2' or sys.platform == 'darvin':
         sudoer = str(input('Недостаточно прав для работы с Fastboot, использовать ' + colored('sudo', 'green', attrs=['bold']) + '? (' + colored('[y]', 'green', attrs=['bold']) + '/n): '))
@@ -336,7 +351,7 @@ for files in flashing:
         if filenotfound == 'Y' or filenotfound == 'н' or filenotfound == 'Н':
             filenotfound = 'y'
         if filenotfound != 'y':
-            errormesg('Файл ' + files['file'] + ' не найден в папке со скриптом', 41)
+            errormesg('Файл ' + files['file'] + ' не найден в папке со скриптом', 53)
 if sudoer != 'offline' and sudoer != 'n':
     if sys.platform == 'linux' or sys.platworm == 'darvin':
         asadmin = 'sudo'
