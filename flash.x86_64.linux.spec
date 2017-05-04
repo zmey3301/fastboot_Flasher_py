@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['flash.py'],
+a = Analysis(['src/flash.py'],
              pathex=['/home/soulstring/script_test/fastboot_Flasher_py/src'],
              binaries=[],
              datas=[],
@@ -21,7 +21,7 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='flash.x86_64.linux',
+          name='fastbootFlasher',
           debug=False,
           strip=False,
           upx=True,
