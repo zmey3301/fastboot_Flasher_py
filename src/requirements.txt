@@ -2,7 +2,7 @@ pyinstaller
 pyparsing
 termcolor
 pycurl
-zipfile
+zipfile36
 hashlib
 certifi
 urllib3
