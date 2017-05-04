@@ -1,5 +1,5 @@
 devices: MARMITE as Wileyfox Swift 2, CRACKLING as Wileyfox Swift, KIPPER as Wileyfox Storm, PORRIDGE as Wileyfox Spark
-download config url: http://work.sstring.ru/script_download/download.txt
+download config url: https://mirror.sstring.ru/script_download/download.txt
 MARMITE 
     flash system.img to system, cache.img to cache, NON-HLOS.bin to modem, adspso.bin to dsp, emmc_appsboot.mbn to aboot, keymaster.mbn to keymaster, devcfg.mbn to devcfg, rpm.mbn to rpm, sbl1.mbn to sbl1, splash.img to splash, tz.mbn to tz, boot.img to boot
     erase none
