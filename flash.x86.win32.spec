@@ -3,7 +3,7 @@
 block_cipher = None
 
 
-a = Analysis(['flash.py'],
+a = Analysis(['src/flash.py'],
              pathex=['E:\\fastboot_Flasher_py\src'],
              binaries=[],
              datas=[],
@@ -21,8 +21,9 @@ exe = EXE(pyz,
           a.binaries,
           a.zipfiles,
           a.datas,
-          name='flash',
+          name='fastbootFlasher',
           debug=False,
           strip=False,
           upx=True,
-          console=True )
+          console=True,
+          icon='E:\\fastboot_Flasher_py\src\icon.ico')
