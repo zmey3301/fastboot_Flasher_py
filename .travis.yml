@@ -3,7 +3,12 @@ python:
   - '3.3'
   - "3.4"
   - "3.5"
+os:
+  - linux
+  - windows
 # command to install dependencies
 install: "pip install -r src/requirements.txt"
 # command to run tests
-script: pyinstaller flash.x86_64.linux.spec
+script: 
+  - if [[ '$TRAVIS_OS_NAME' == 'linux' ]];pyinstaller  flash.x86_64.linux.spec; fi
+  - if [[ '$TRAVIS_OS_NAME' == 'windows' ]];pyinstaller  flash.x86.win32.spec; fi
