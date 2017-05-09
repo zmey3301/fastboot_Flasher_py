@@ -4,6 +4,9 @@ from termcolor import colored
 from io import BytesIO
 filesApprooved = []
 firmwarev = None
+data = {'file': 'userdata.img', 'part': 'userdata'}
+recovery = {'file': 'recovery.img', 'part': 'recovery'}
+extraParts = [{'in': 'NON-HLOS', 'out': 'modem'}, {'in': 'emmc_appsboot', 'out': 'aboot'}, {'in': 'adspso', 'out': 'dsp'}]
 if sys.platform == 'win32':
     import colorama
     colorama.init()
@@ -12,6 +15,7 @@ def cls():
 def errormesg(errinfo, errcode):
     print (colored("!!", "red", attrs=["bold", "blink"]) + colored(" Ошибка: " + str(errinfo), "red", attrs=["bold"]) + colored(" !!", "red", attrs=["bold", "blink"]))
     print ("Выполнение скрипта было остановлено, код ошибки " + str(errcode) + ". Устраните проблему и попробуйте снова.")
+    input()
     sys.exit(errcode)
 def downloader(mode, dev):
     def progress(download_t, download_d, upload_t, upload_d):
@@ -57,7 +61,7 @@ def downloader(mode, dev):
                                        'link': files['link']})
                 test += 1
     if test == 0:
-        errormesg('Нет подходящих вайлов для загрузки', 46)
+        errormesg('Нет подходящих файлов для загрузки', 46)
     i = 0
     for files in filesApprooved:
         print (colored(str(i + 1) + ') ', 'green', attrs=['bold']) + files['file'])
@@ -130,30 +134,36 @@ eraseparse = ppa.Suppress('erase ') + ppa.OneOrMore(ppa.Word(ppa.alphanums + '-_
         #config = configfile.readlines
     #except FileNotFoundError:
         #errormesg('Файл конфигурации не найден', 51)
+directoryMode = False
 try:
     with open('config.sst', 'r') as configfile:
         config = configfile.readlines()
 except FileNotFoundError:
-    errormesg('Файл конфигурации не найден', 51)
-prod = devparse.parseString(config[0]).asList()
-config.remove(config[0])
-downloadConfigUrl = downloadUrlParse.parseString(config[0]).asList()
-downloadConfigUrl = downloadConfigUrl[0]
-config.remove(config[0])
-i = 1
-products = []
-timed = []
-print (prod)
-while i < len(prod):
-    timed.append(prod.pop(i))
-    i +=1
-print(timed)
-i = 0
+    dirmode = input('Файл конфигурации не найден, активировать DirectoryMode? (' + colored('[y]', 'green', attrs=['bold']) + '/n): ')
+    if dirmode.lower() == 'n' or dirmode.lower() == 'т':
+        errormesg('Файл конфигурации не найден', 51)
+    else:
+        directoryMode = True
+if directoryMode != True:
+    prod = devparse.parseString(config[0]).asList()
+    config.remove(config[0])
+    downloadConfigUrl = downloadUrlParse.parseString(config[0]).asList()
+    downloadConfigUrl = downloadConfigUrl[0]
+    config.remove(config[0])
+    i = 1
+    products = []
+    timed = []
+    print (prod)
+    while i < len(prod):
+        timed.append(prod.pop(i))
+        i +=1
+    print(timed)
+    i = 0
 
-while i < len(timed):
-    products.append({'product': prod[i],
-                    'device': timed[i]})
-    i += 1
+    while i < len(timed):
+        products.append({'product': prod[i],
+                        'device': timed[i]})
+        i += 1
 cls()
 print ("***********************************************************")
 print ("*                    " + colored("Добро пожаловать!", "green", attrs=["bold"]) + "                    *")
@@ -166,11 +176,14 @@ print ("*  " + colored("4)", "green", attrs=["bold"]) + " Обновление �
 print ("*  " + colored("q) Выход.", "red", attrs=["bold"]) + "                                              *")
 print ("***********************************************************")
 upd = str(input("Что выберем? (1/2/3/4/" + colored("[q]", "green", attrs=["bold"]) + "): "))
-if upd != "1" and upd != "2" and upd != "3" and upd!= '4':
+if upd != "1" and upd != "2" and upd != "3" and upd != '4':
     sys.exit(0)
-downloading = input('Загружать файлы для установки с сервера? (' + colored('[y]', 'green', attrs=['bold']) + '/n): ')
-downloading = downloading.lower()
-if downloading == 'т':
+if directoryMode != True:
+    downloading = input('Загружать файлы для установки с сервера? (' + colored('[y]', 'green', attrs=['bold']) + '/n): ')
+    downloading = downloading.lower()
+    if downloading == 'т':
+        downloading = 'n'
+elif directoryMode == True:
     downloading = 'n'
 if upd == "3":
     ready = None
@@ -236,7 +249,19 @@ if upd == '4':
         sideloadFile = downloader('recovery', products[sideloadDevice]['product'].lower())
         #sideloadFile = filesApprooved[firmwarev]['file']
     else:
-        sideloadFile = 'sideload.zip'
+        i = 0
+        sideloadList = []
+        for file in os.listdir(os.path.dirname(os.path.realpath(__file__))):
+            if file.endswith('.zip'):
+                i += 1
+                print (colored(str(i) + ')', 'green', attrs['bold']) + ' ' + file + ';')
+                sideloadList.append(file)
+        firmwarev = input('Какой файл прошивать? (' + colored('[1]', 'green', attrs=['bold']) + '): ')
+        if firmwarev == '':
+            firmwarev = 0
+        else:
+            firmwarev = int(firmwarev) - 1
+        sideloadFile = sideloadList[firmwarev]
     input('Активируйте Sideload и нажмите Enter')
     adbdevice = str(subprocess.check_output(["adb", "devices"]), sys.stdout.encoding)
     if not str(b'\tsideload\n', sys.stdout.encoding) in adbdevice:
@@ -250,7 +275,7 @@ if upd == '4':
     if adbreboot == 'y':
         subprocess.run(['adb', 'reboot'], stderr=subprocess.STDOUT)
     sys.exit(0)
-sudoer = 'offline'
+sudoer = None
 try:
     fbtdev = subprocess.check_output(["fastboot", "getvar", "product"], stderr=subprocess.STDOUT, timeout=1)
 except FileNotFoundError:
@@ -264,10 +289,12 @@ except subprocess.TimeoutExpired as err:
         errormesg('Недостаточно прав для работы с Fastboot', 21)
 except subprocess.CalledProcessError as err:
     errormesg('Обнаружена проблема в работе Fastboot, требуется проверка с Вашей стороны', 2000 + err.returncode)
-if sudoer == 'N' or sudoer == 'т' or sudoer == 'Т':
-    sudoer = 'n'
-if sudoer != 'offline':
-    if sudoer != 'n':
+if sudoer == 'N' or sudoer == 'т' or sudoer == 'Т' or sudoer == 'n':
+    sudoer = False
+else:
+    sudoer == True
+if sudoer != None:
+    if sudoer != False:
         print ('Возможно сейчас вас попросят ввести пароль!')
         print (colored('Если вы "застряли" на этом месте проверьте подключение устройства!', 'red', attrs=['bold']))
         if sys.platform == 'linux' or sys.platform == 'darvin':
@@ -279,62 +306,69 @@ if sudoer != 'offline':
             errormesg('Недостаточно прав для работы с Fastboot, запустите скрипт от имени администратора', 21)
     else:
         errormesg('Недостаточно прав для работы с Fastboot', 21)
-fbtdev = str(fbtdev, sys.stdout.encoding)
-devparse = ppa.ZeroOrMore(ppa.Suppress('product: ') + ppa.Word(ppa.alphas))
-devices = devparse.parseString(fbtdev).asList()
-whatican = []
-i = 0
-while i < len(products):
-    if products[i]['product'] in devices:
-        whatican.append({'product': products[i]['product'],
-                        'device': products[i]['device']})
-    i += 1
-i = 0
-#while i < len(products):
-    #while whatican.count(products[i]['product']) > 1:
-        #whatican.remove(products[i]['product'])
-    #while whaticanname.count(products[i]['device']) > 1:
-        #whatican.remove(prodnames[i])
-    #i += 1
-if len(whatican) > 1:
-    print('Подключено несколько устройств,' + ' выберите необходимое из списка ниже:')
-    i = 0
-    for device in whatican:
-        i += 1
-        print (colored(str(i) + ') ', 'green', attrs=['bold']) + device['device']) + ';'
-    devnum = input('Введите номер [1]: ')
-    if devnum == '':
-        devnum = 0
-    else:
-        devnum = int(devnum) - 1
-elif len(whatican) == 0:
-    errormesg('Поддерживаемые устройства не обнаружены', 22)
-else:
-    devnum = 0;
-devtest = input('Выбрано устройство ' + colored(whatican[devnum]['device'], 'green', attrs=['bold']) + ', продолжить? (' + colored('[y]', 'green', attrs=['bold']) + '/n): ')
-if devtest == 'N' or devtest == 'т' or devtest == 'Т':
-    devtest = 'n'
-if devtest == 'n':
-    errormesg('Устройство выбрано неверно, выполнение остановлено пользователем', 31)
 flashrec = input('Прошивать recovery? ' + colored('Этот пункт не спасет если у вас установлен флаг "Обновлять режим восстановления!" ', 'red', attrs=['bold']) + '(y/' + colored('[n]', 'green', attrs=['bold']) + '): ')
 if flashrec == 'Y' or flashrec == 'Н' or flashrec == 'н':
     flashrec = 'y'
-i = 0
-test = 0
-while i < len(config):
-    if whatican[devnum]['product'].lower() in config[i].lower():
-        flashfiles = flashparse.parseString(config[i+1]).asList()
-        if not 'none' in config[i+2]:
-            eraseparts = eraseparse.parseString(config[i+2]).asList()
-        else:
-            eraseparts = None
-    i+=3
-i = 0
 flashing = []
-while i < len(flashfiles):
-    flashing.append({'file': flashfiles[i],
-                     'part': flashfiles[i+1]})
-    i+=2
+i = 0
+if directoryMode == False:
+    fbtdev = str(fbtdev, sys.stdout.encoding)
+    devparse = ppa.ZeroOrMore(ppa.Suppress('product: ') + ppa.Word(ppa.alphas))
+    devices = devparse.parseString(fbtdev).asList()
+    whatican = []
+    while i < len(products):
+        if products[i]['product'] in devices:
+            whatican.append({'product': products[i]['product'],
+                            'device': products[i]['device']})
+        i += 1
+    i = 0
+    if len(whatican) > 1:
+        print('Подключено несколько устройств,' + ' выберите необходимое из списка ниже:')
+        i = 0
+        for device in whatican:
+            i += 1
+            print (colored(str(i) + ') ', 'green', attrs=['bold']) + device['device']) + ';'
+        devnum = input('Введите номер [1]: ')
+        if devnum == '':
+            devnum = 0
+        else:
+            devnum = int(devnum) - 1
+    elif len(whatican) == 0:
+        errormesg('Поддерживаемые устройства не обнаружены', 22)
+    else:
+        devnum = 0;
+    devtest = input('Выбрано устройство ' + colored(whatican[devnum]['device'], 'green', attrs=['bold']) + ', продолжить? (' + colored('[y]', 'green', attrs=['bold']) + '/n): ')
+    if devtest == 'N' or devtest == 'т' or devtest == 'Т':
+        devtest = 'n'
+    if devtest == 'n':
+        errormesg('Устройство выбрано неверно, выполнение остановлено пользователем', 31)
+    i = 0
+    test = 0
+    while i < len(config):
+        if whatican[devnum]['product'].lower() in config[i].lower():
+            flashfiles = flashparse.parseString(config[i+1]).asList()
+            if not 'none' in config[i+2]:
+                eraseparts = eraseparse.parseString(config[i+2]).asList()
+            else:
+                eraseparts = None
+        i+=3
+    i = 0
+    while i < len(flashfiles):
+        flashing.append({'file': flashfiles[i],
+                        'part': flashfiles[i+1]})
+        i+=2
+elif directoryMode == True:
+    eraseparts = None
+    parseFiles = (ppa.Word(ppa.alphanums + '-_'))('part') + ppa.Suppress('.' + ppa.Word(ppa.alphas))
+    for file in os.listdir(os.path.dirname(os.path.realpath(__file__))):
+        if file.endswith('.mbn') or file.endswith('.img') or file.endswith('.bin'):
+            part = parseFiles.parseString(file).part
+            for changes in extraParts:
+                if part == changes['in']:
+                    part = changes['out']
+            if file != data['file'] and file != recovery['file']:
+                flashing.append({'file': file,
+                                'part': part})
 if flashrec == 'y' and not 'recovery' in flashing:
     #Just name of recovery file, almost always it's named recovery.img
     flashing.append({'file': 'recovery.img',
@@ -352,7 +386,7 @@ for files in flashing:
             filenotfound = 'y'
         if filenotfound != 'y':
             errormesg('Файл ' + files['file'] + ' не найден в папке со скриптом', 53)
-if sudoer != 'offline' and sudoer != 'n':
+if sudoer != None and sudoer != False:
     if sys.platform == 'linux' or sys.platworm == 'darvin':
         asadmin = 'sudo'
     else:
