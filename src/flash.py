@@ -34,7 +34,7 @@ def downloader(mode, dev):
         except urllib3.exceptions.HTTPError as err:
             return False
     if testConn() != True:
-        errormesg('Нет соединения с с сервером', 42)
+        errormesg('Нет соединения с сервером', 42)
     c = pycurl.Curl()
     c.setopt(pycurl.CAINFO, certifi.where())
     c.setopt(c.URL, downloadConfigUrl)
